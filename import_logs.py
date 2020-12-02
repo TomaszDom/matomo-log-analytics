@@ -1680,6 +1680,13 @@ class StaticResolver(object):
             )
         self._main_url = site['main_url']
         stats.matomo_sites.add(self.site_id)
+	matomo.call_api(
+            'SitesManager.setSiteLastImportLogsDate', idSite=self.site_id
+        )
+        if site.get('result') == 'error':
+            fatal_error(
+                "cannot set log_analyzer_updated_at for a site: %s" % site.get('message')
+            )
 
     def resolve(self, hit):
         return (self.site_id, self._main_url)
